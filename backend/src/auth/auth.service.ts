@@ -75,7 +75,7 @@ export class AuthService {
         };
     }
 
-    async refreshToken(refreshToken: string): Promise<{ accessToken: string }> {
+    async refreshToken(refreshToken: string): Promise<{ accessToken: string; refreshToken: string }> {
         try {
             const payload = this.jwtService.verify(refreshToken, {
                 secret: this.configService.get<string>('JWT_REFRESH_SECRET') || 'default-refresh-secret-key',
@@ -93,12 +93,29 @@ export class AuthService {
                 throw new UnauthorizedException('User is banned');
             }
 
+            // Generate new access token
             const newAccessToken = this.jwtService.sign({
                 email: user.email,
                 sub: user.id,
             });
 
-            return { accessToken: newAccessToken };
+            // Generate new refresh token (token rotation)
+            const newRefreshToken = this.jwtService.sign(
+                { email: user.email, sub: user.id },
+                {
+                    secret: this.configService.get<string>('JWT_REFRESH_SECRET') || 'default-refresh-secret-key',
+                    expiresIn: this.configService.get('JWT_REFRESH_EXPIRES_IN') || '7d',
+                }
+            );
+
+            // Update refresh token in database (invalidate old token)
+            user.refreshToken = newRefreshToken;
+            await this.userRepository.save(user);
+
+            return {
+                accessToken: newAccessToken,
+                refreshToken: newRefreshToken
+            };
         } catch (error) {
             throw new UnauthorizedException('Invalid refresh token');
         }

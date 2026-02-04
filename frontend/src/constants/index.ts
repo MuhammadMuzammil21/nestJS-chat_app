@@ -1,23 +1,13 @@
-// API Base URL
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+export const API_BASE_URL = 'http://localhost:3000';
+export const FRONTEND_URL = 'http://localhost:5173';
 
-// API Endpoints
-export const API_ENDPOINTS = {
-    AUTH: {
-        GOOGLE_LOGIN: `${API_BASE_URL}/auth/google`,
-        LOGOUT: `${API_BASE_URL}/auth/logout`,
-        REFRESH: `${API_BASE_URL}/auth/refresh`,
-        ME: `${API_BASE_URL}/auth/me`,
-    },
-    USERS: {
-        PROFILE: `${API_BASE_URL}/users/profile`,
-        UPDATE_PROFILE: `${API_BASE_URL}/users/profile`,
-    },
-};
-
-// Local Storage Keys
-export const STORAGE_KEYS = {
-    ACCESS_TOKEN: 'access_token',
-    REFRESH_TOKEN: 'refresh_token',
+export const TOKEN_KEYS = {
+    ACCESS_TOKEN: 'accessToken',
+    REFRESH_TOKEN: 'refreshToken',
     USER: 'user',
-};
+} as const;
+
+export const TOKEN_EXPIRY = {
+    ACCESS_TOKEN: 15 * 60 * 1000, // 15 minutes in milliseconds
+    REFRESH_TOKEN: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+} as const;

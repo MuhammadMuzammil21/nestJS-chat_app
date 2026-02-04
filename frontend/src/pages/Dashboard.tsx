@@ -1,56 +1,12 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, Button, Avatar, Descriptions, message } from 'antd';
+import { Card, Button, Avatar, Descriptions } from 'antd';
 import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
-
-interface User {
-    id: string;
-    email: string;
-    displayName: string;
-    avatarUrl?: string;
-    role: string;
-}
+import { useAuth } from '../contexts/AuthContext';
 
 function Dashboard() {
-    const navigate = useNavigate();
-    const [user, setUser] = useState<User | null>(null);
-
-    useEffect(() => {
-        // Check if user is authenticated
-        const accessToken = localStorage.getItem('accessToken');
-        const userData = localStorage.getItem('user');
-
-        if (!accessToken || !userData) {
-            navigate('/');
-            return;
-        }
-
-        setUser(JSON.parse(userData));
-    }, [navigate]);
+    const { user, logout } = useAuth();
 
     const handleLogout = async () => {
-        try {
-            const accessToken = localStorage.getItem('accessToken');
-
-            // Call logout endpoint
-            await fetch('http://localhost:3000/auth/logout', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                },
-            });
-
-            // Clear local storage
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
-            localStorage.removeItem('user');
-
-            message.success('Logged out successfully');
-            navigate('/');
-        } catch (error) {
-            console.error('Logout error:', error);
-            message.error('Failed to logout');
-        }
+        await logout();
     };
 
     if (!user) {
@@ -107,7 +63,7 @@ function Dashboard() {
                         </h3>
                         <p className="text-green-700">
                             You have successfully logged in using Google OAuth 2.0.
-                            Your JWT tokens are securely stored and ready to use for API requests.
+                            Your JWT tokens are securely stored and automatically refreshed when needed.
                         </p>
                     </div>
                 </Card>

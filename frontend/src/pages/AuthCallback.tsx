@@ -1,10 +1,13 @@
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Spin } from 'antd';
+import { useAuth } from '../contexts/AuthContext';
+import type { User } from '../types/auth';
 
 function AuthCallback() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
+    const { login } = useAuth();
 
     useEffect(() => {
         const handleCallback = () => {
@@ -15,10 +18,14 @@ function AuthCallback() {
                 const userStr = searchParams.get('user');
 
                 if (accessToken && refreshToken && userStr) {
-                    // Store tokens in localStorage
-                    localStorage.setItem('accessToken', accessToken);
-                    localStorage.setItem('refreshToken', refreshToken);
-                    localStorage.setItem('user', userStr);
+                    const user: User = JSON.parse(userStr);
+
+                    // Use auth context to login
+                    login({
+                        accessToken,
+                        refreshToken,
+                        user,
+                    });
 
                     // Redirect to dashboard
                     navigate('/dashboard');
@@ -33,7 +40,7 @@ function AuthCallback() {
         };
 
         handleCallback();
-    }, [navigate, searchParams]);
+    }, [navigate, searchParams, login]);
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">

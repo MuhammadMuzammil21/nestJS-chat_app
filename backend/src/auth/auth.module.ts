@@ -3,14 +3,18 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { User } from '../entities/user.entity';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { TokenCleanupService } from './services/token-cleanup.service';
+
 
 @Module({
     imports: [
+        ScheduleModule.forRoot(),
         PassportModule.register({ defaultStrategy: 'jwt' }),
         JwtModule.registerAsync({
             imports: [ConfigModule],
@@ -28,6 +32,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     providers: [
         AuthService,
         JwtStrategy,
+        TokenCleanupService,
         // Conditionally provide GoogleStrategy only if credentials exist
         {
             provide: GoogleStrategy,

@@ -237,12 +237,78 @@ frontend/
 
 **Status:** All Day 3 tasks complete! Full-stack authentication working end-to-end.
 
-**Optional Enhancements (Future):**
-- [ ] Create token cleanup service for expired tokens
-- [ ] Implement refresh token rotation
-- [ ] Add refresh token hashing for additional security
-- [ ] Implement automatic token refresh on expiry
-- [ ] Add protected route guards
+**Enhancements Completed:**
+- [x] Create token cleanup service for expired tokens
+- [x] Implement refresh token rotation
+- [x] Implement automatic token refresh on expiry
+- [x] Add protected route guards
+- [x] Set up TanStack Query
+- [x] Create authentication context
+
+#### ✅ Day 4 (Feb 4, 2026) - Role-Based Authorization
+**Backend Completed:**
+- [x] Define role enum (FREE, PREMIUM, ADMIN)
+- [x] Update User entity with role field
+- [x] Implement role-based authorization guards (RolesGuard)
+- [x] Create custom decorators (@Roles, @CurrentUser)
+- [x] Create role assignment logic (default: FREE)
+- [x] Add role-based access control to endpoints
+- [x] Create demo endpoints (/demo/free, /demo/premium, /demo/admin)
+- [x] Create user management endpoints (admin-only)
+- [x] Implement role update functionality
+
+**Frontend Completed:**
+- [x] Create protected route component
+- [x] Implement route guards based on authentication
+- [x] Create role-based component visibility logic (RoleGate)
+- [x] Add role information to auth context
+- [x] Create higher-order component for role checking (withRole)
+- [x] Implement redirect logic for unauthorized access
+- [x] Create "Upgrade to Premium" placeholder UI
+- [x] Create role badge component with color coding
+- [x] Create useRole hook for easy role checking
+- [x] Update dashboard with role-based features
+
+**Status:** All Day 4 tasks complete! Role-based authorization fully implemented.
+
+**Deliverables:**
+- ✅ Role-based access control system (FREE, PREMIUM, ADMIN)
+- ✅ Protected routes and components
+- ✅ Role-specific feature gating
+- ✅ Admin user management endpoints
+
+#### ✅ Day 5 (Feb 7, 2026) - User Profile Management
+**Backend Completed:**
+- [x] Create user profile module
+- [x] Implement GET profile endpoint (fetch current user)
+- [x] Implement PUT profile endpoint (update profile)
+- [x] Add validation for profile updates (displayName 2-50 chars, statusMessage max 200, URL validation)
+- [x] Implement profile picture upload endpoint (5MB limit, images only)
+- [x] Create DTOs for profile requests/responses
+- [x] Add authorization guards to profile endpoints
+- [x] Implement error handling for profile operations
+- [x] Write unit tests for profile service
+
+**Frontend Completed:**
+- [x] Create user profile page component
+- [x] Implement profile display UI
+- [x] Create profile edit form with Ant Design
+- [x] Add form validation
+- [x] Implement profile update API integration
+- [x] Create avatar upload component
+- [x] Add loading and error states
+- [x] Create success/error notifications
+- [x] Style profile page with Tailwind
+- [x] Add profile route to router
+- [x] Add navigation to profile from dashboard
+
+**Status:** All Day 5 tasks complete! User profile management fully implemented.
+
+**Deliverables:**
+- ✅ User profile management functionality (GET, PUT, POST endpoints)
+- ✅ Profile view and edit interfaces with seamless mode switching
+- ✅ Profile picture management with upload and validation
+
 
 ## 🧪 Testing
 

@@ -10,6 +10,7 @@ import { AuthController } from './auth.controller';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { TokenCleanupService } from './services/token-cleanup.service';
+import { RolesGuard } from './guards/roles.guard';
 
 
 @Module({
@@ -33,6 +34,7 @@ import { TokenCleanupService } from './services/token-cleanup.service';
         AuthService,
         JwtStrategy,
         TokenCleanupService,
+        RolesGuard,
         // Conditionally provide GoogleStrategy only if credentials exist
         {
             provide: GoogleStrategy,
@@ -49,6 +51,6 @@ import { TokenCleanupService } from './services/token-cleanup.service';
             inject: [ConfigService, AuthService],
         },
     ],
-    exports: [AuthService, JwtModule],
+    exports: [AuthService, JwtModule, RolesGuard],
 })
 export class AuthModule { }

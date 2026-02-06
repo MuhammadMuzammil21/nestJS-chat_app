@@ -1,9 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
-import { User } from '../entities/user.entity';
+import { User, UserRole } from '../entities/user.entity';
 import { GoogleUserDto, TokenResponseDto } from './dto/auth.dto';
 
 @Injectable()
@@ -34,12 +34,13 @@ export class AuthService {
                 user.avatarUrl = googleUser.avatarUrl || null;
                 await this.userRepository.save(user);
             } else {
-                // Create new user
+                // Create new user with default FREE role
                 user = this.userRepository.create({
                     email: googleUser.email,
                     googleId: googleUser.googleId,
                     displayName: googleUser.displayName,
                     avatarUrl: googleUser.avatarUrl || null,
+                    role: UserRole.FREE, // Explicitly set default role
                 });
                 await this.userRepository.save(user);
             }
@@ -127,5 +128,22 @@ export class AuthService {
 
     async logout(userId: string): Promise<void> {
         await this.userRepository.update(userId, { refreshToken: null });
+    }
+
+    async assignRole(userId: string, role: UserRole): Promise<User> {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+
+        if (!user) {
+            throw new NotFoundException(`User with ID ${userId} not found`);
+        }
+
+        user.role = role;
+        return await this.userRepository.save(user);
+    }
+
+    async getAllUsers(): Promise<User[]> {
+        return this.userRepository.find({
+            select: ['id', 'email', 'displayName', 'avatarUrl', 'role', 'subscriptionStatus', 'isBanned', 'createdAt'],
+        });
     }
 }

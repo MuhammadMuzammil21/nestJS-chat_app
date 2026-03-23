@@ -215,10 +215,11 @@ export const CreateConversationModal: React.FC<CreateConversationModalProps> = (
                     ]}
                 >
                     <Select
-                        mode={
-                            conversationType === ConversationType.GROUP
-                                ? 'multiple'
-                                : undefined
+                        mode="multiple"
+                        maxCount={
+                            conversationType === ConversationType.DIRECT
+                                ? 1
+                                : 50
                         }
                         placeholder="Select participants"
                         loading={loadingUsers}
